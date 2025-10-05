@@ -1,25 +1,14 @@
 package com.example.lab_week_03
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 
-class ListFragment : Fragment(), View.OnClickListener {
-
-    private lateinit var coffeeListener: CoffeeListener
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is CoffeeListener) {
-            coffeeListener = context
-        } else {
-            throw RuntimeException("$context must implement CoffeeListener")
-        }
-    }
+class ListFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,17 +20,25 @@ class ListFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val coffeeList = listOf(
-            R.id.affogato,
-            R.id.americano,
-            R.id.latte
+            view.findViewById<View>(R.id.affogato),
+            view.findViewById<View>(R.id.americano),
+            view.findViewById<View>(R.id.latte)
         )
-        coffeeList.forEach { id ->
-            view.findViewById<TextView>(id).setOnClickListener(this)
+
+        coffeeList.forEach { coffee ->
+            val coffeeId = coffee.id
+            coffee.setOnClickListener {
+                val bundle = Bundle().apply {
+                    putInt(COFFEE_ID, coffeeId)
+                }
+                findNavController().navigate(R.id.coffee_id_action, bundle)
+            }
         }
     }
 
-    override fun onClick(v: View) {
-        coffeeListener.onSelected(v.id)
+    companion object {
+        const val COFFEE_ID = "COFFEE_ID"
     }
 }
