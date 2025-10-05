@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 
 class ListFragment : Fragment() {
@@ -24,16 +23,17 @@ class ListFragment : Fragment() {
         val coffeeList = listOf(
             view.findViewById<View>(R.id.affogato),
             view.findViewById<View>(R.id.americano),
-            view.findViewById<View>(R.id.latte)
+            view.findViewById<View>(R.id.latte),
+            view.findViewById<View>(R.id.cappuccino),
+            view.findViewById<View>(R.id.espresso)
         )
 
         coffeeList.forEach { coffee ->
-            val coffeeId = coffee.id
+            val fragmentBundle = Bundle().apply {
+                putInt(COFFEE_ID, coffee.id)
+            }
             coffee.setOnClickListener {
-                val bundle = Bundle().apply {
-                    putInt(COFFEE_ID, coffeeId)
-                }
-                findNavController().navigate(R.id.coffee_id_action, bundle)
+                findNavController().navigate(R.id.coffee_id_action, fragmentBundle)
             }
         }
     }
